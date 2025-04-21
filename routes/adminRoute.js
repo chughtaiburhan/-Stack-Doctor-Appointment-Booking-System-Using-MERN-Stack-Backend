@@ -1,0 +1,13 @@
+import express from "express";
+import { addDoctor,allDoctors,appointmentAdmin,getDashboardStats,loginAdmin } from "../controllers/adminController.js";
+import upload from "../controllers/multer.js"; 
+import { authAdmin } from "../middleware/AuthAdmin.js";
+import { changeAvailablity } from "../controllers/doctorController.js";
+const adminRoute=express.Router();
+adminRoute.post('/add-doctor', upload.single('image'), authAdmin, addDoctor);
+adminRoute.post('/login',loginAdmin);
+adminRoute.post('/all-doctor',authAdmin ,allDoctors);
+adminRoute.post('/change-availiblity',authAdmin ,changeAvailablity);
+adminRoute.get('/appointment-list',authAdmin ,appointmentAdmin); 
+adminRoute.get("/dashboard-stats", authAdmin, getDashboardStats);
+export default adminRoute;
