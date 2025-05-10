@@ -18,13 +18,9 @@ app.use(express.json());
 app.use(cors());
 
 // DB Connect
-mongoose.connect(process.env.mongoatlasURI, {
-  ssl: true,
-  sslValidate: true,
-  tlsAllowInvalidCertificates: false,
-  tlsAllowInvalidHostnames: false
-});
-
+mongoose.connect(process.env.mongoatlasURI)
+  .then(() => console.log("MongoAtlas connected"))
+  .catch((err) => console.error("MongoAtlas connection error:", err));
 
 // Cloudinary Connect
 connectCloudinary();
