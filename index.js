@@ -25,6 +25,12 @@ mongoose.connect(process.env.mongoatlasURI)
 // Cloudinary Connect
 connectCloudinary();
 
+// Test Route
+app.get("/test", (req, res) => {
+  res.status(200).send("API is working!");
+});
+
+
 // API endpoint
 app.use("/doctors", doctorRoute);
 app.use("/admin", adminRouter);
