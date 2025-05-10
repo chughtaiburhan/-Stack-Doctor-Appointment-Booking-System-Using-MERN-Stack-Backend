@@ -17,8 +17,11 @@ const port = process.env.PORT || 4000;
 app.use(express.json());
 app.use(cors({
   origin: ["https://stack-doctor-appointment-booking-system-website.vercel.app", "http://localhost:5173","https://stack-doctor-appointment-bo-git-04b75d-chughtaiburhans-projects.vercel.app","http://localhost:5174"],
-  credentials: true
+  credentials: true,
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+  allowedHeaders: ["Content-Type", "Authorization", "aToken"]
 }));
+
 
 // DB Connect
 mongoose.connect(process.env.mongoatlasURI)
