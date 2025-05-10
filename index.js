@@ -18,7 +18,13 @@ app.use(express.json());
 app.use(cors());
 
 // DB Connect
-mongoose.connect(process.env.MONGODB_URI, console.info("🚀 MongoDB Connected"));
+mongoose.connect(process.env.mongoatlasURI, {
+  ssl: true,
+  sslValidate: true,
+  tlsAllowInvalidCertificates: false,
+  tlsAllowInvalidHostnames: false
+});
+
 
 // Cloudinary Connect
 connectCloudinary();
