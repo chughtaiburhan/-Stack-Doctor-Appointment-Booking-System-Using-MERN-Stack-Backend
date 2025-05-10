@@ -16,7 +16,7 @@ const port = process.env.PORT || 4000;
 // Middleware
 app.use(express.json());
 app.use(cors({
-  origin: ["https://stack-doctor-appointment-booking-system-website.vercel.app"],
+  origin: ["https://stack-doctor-appointment-booking-system-website.vercel.app", "http://localhost:5173"],
   credentials: true
 }));
 
