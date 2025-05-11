@@ -192,20 +192,19 @@ export const bookAppointment = async (req, res) => {
 
     // Prepare appointment object with all required fields
     const appointmentData = {
-      userId,
-      docId,
-      userData,
-      docData,
-      slotDate,
-      slotTime,
-      amount: docData.fees,
-      date: new Date(),
-      docDate: new Date().toISOString(), // or you can use slotDate
-      userDate: new Date().toISOString(),
-      cancelled: "false",
-      payment: "pending", // or "not_paid" / "false"
-      isCompleted: "false",
-    };
+  userId,
+  docId,
+  slotDate,
+  slotTime,
+  amount: docData.fees,
+  date: new Date().toString(),
+  docDate: new Date().toISOString(),
+  userDate: new Date().toISOString(),
+  cancelled: false,
+  payment: "pending",
+  isCompleted: false,
+};
+
 
     // Save appointment
     const newAppointment = new appointmentModel(appointmentData);
@@ -230,6 +229,7 @@ export const listAppointment = async (req, res) => {
     // Populating doctor information (assuming `docId` in appointment is referring to Doctor model)
     const appointments = await appointmentModel
       .find({ userId })
+
       .populate('docId', 'name image address speciality'); // Adjust fields as per your schema
     
     res.json({ success: true, appointment: appointments });

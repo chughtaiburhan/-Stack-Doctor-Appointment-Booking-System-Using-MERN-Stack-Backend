@@ -112,15 +112,15 @@ export const allDoctors = async (req, res) => {
 // API to get appointment list with populated doctor and user info
 export const appointmentAdmin = async (req, res) => {
   try {
-    const appointment = await appointmentModel
-      .find({})
-      .populate("userId", "name image dob") // Only fetch necessary fields from user
-      .populate("docId", "name image speciality"); // Only fetch necessary fields from doctor
+    const appointments = await appointmentModel
+      .find({ userId: { $ne: null } })
+      .populate("userId", "name dob") // Populates the userId field with data from the 'user' collection, selecting specific fields
+      .populate("docId", "name image speciality"); // Populates the docId field with data from the 'doctor' collection, selecting specific fields
 
-    res.json({ success: true, appointment });
+    res.json({ success: true, appointment: appointments }); // Sends a JSON response with a success flag and the appointments data
   } catch (error) {
-    console.error(error);
-    res.json({ success: false, message: error.message });
+    console.error(error); // Logs any errors that occur during the process
+    res.json({ success: false, message: error.message }); // Sends a JSON response indicating failure and the error message
   }
 };
 
