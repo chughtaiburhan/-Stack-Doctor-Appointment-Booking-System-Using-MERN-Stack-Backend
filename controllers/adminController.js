@@ -115,20 +115,18 @@ export const appointmentAdmin = async (req, res) => {
     // Fetch appointments and populate user & doctor details
     const appointments = await appointmentModel
       .find({ userId: { $ne: null } })
-      .populate("userId", "name dob")
+      .populate("userId", "name dob email gender") // added gender
       .populate("docId", "name image speciality");
 
-    // Filter out and delete appointments where user or doctor data is missing (i.e., deleted from DB)
+    // Filter out and delete appointments where user or doctor data is missing
     const invalidAppointments = appointments.filter(
       (appt) => !appt.userId || !appt.docId
     );
 
-    // Delete the invalid appointments from DB
     for (const appt of invalidAppointments) {
       await appointmentModel.findByIdAndDelete(appt._id);
     }
 
-    // Filter valid appointments for response
     const validAppointments = appointments.filter(
       (appt) => appt.userId && appt.docId
     );
@@ -139,6 +137,7 @@ export const appointmentAdmin = async (req, res) => {
     res.json({ success: false, message: error.message });
   }
 };
+
 
 
 // API to get total users and appointments
