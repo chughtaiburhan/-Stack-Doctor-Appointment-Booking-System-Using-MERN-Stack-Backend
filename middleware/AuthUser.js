@@ -1,9 +1,11 @@
-export const autUser = async (req, res, next) => {
+import jwt from 'jsonwebtoken';
+
+export const authUser = async (req, res, next) => {
   try {
-    const { token } = req.headers;
+    const token = req.headers['authorization'];
 
     if (!token) {
-      return res.json({
+      return res.status(401).json({
         success: false,
         message: "Not Authorized. Please log in again.",
       });
@@ -12,11 +14,11 @@ export const autUser = async (req, res, next) => {
     const token_decode = jwt.verify(token, process.env.JWT_SECRET);
 
     req.body = req.body || {};
-    req.body.userId = token_decode.id;  // This should be consistent
+    req.body.userId = token_decode.id;
 
-    next(); // Proceed to route
+    next();
   } catch (error) {
     console.error("Auth Error:", error);
-    res.json({ success: false, message: error.message });
+    res.status(401).json({ success: false, message: "Invalid or expired token" });
   }
 };
