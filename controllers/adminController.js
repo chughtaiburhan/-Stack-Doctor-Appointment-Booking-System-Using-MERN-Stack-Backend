@@ -112,17 +112,34 @@ export const allDoctors = async (req, res) => {
 // API to get appointment list with populated doctor and user info
 export const appointmentAdmin = async (req, res) => {
   try {
+    // Fetch appointments and populate user & doctor details
     const appointments = await appointmentModel
       .find({ userId: { $ne: null } })
-      .populate("userId", "name dob") // Populates the userId field with data from the 'user' collection, selecting specific fields
-      .populate("docId", "name image speciality"); // Populates the docId field with data from the 'doctor' collection, selecting specific fields
+      .populate("userId", "name dob")
+      .populate("docId", "name image speciality");
 
-    res.json({ success: true, appointment: appointments }); // Sends a JSON response with a success flag and the appointments data
+    // Filter out and delete appointments where user or doctor data is missing (i.e., deleted from DB)
+    const invalidAppointments = appointments.filter(
+      (appt) => !appt.userId || !appt.docId
+    );
+
+    // Delete the invalid appointments from DB
+    for (const appt of invalidAppointments) {
+      await appointmentModel.findByIdAndDelete(appt._id);
+    }
+
+    // Filter valid appointments for response
+    const validAppointments = appointments.filter(
+      (appt) => appt.userId && appt.docId
+    );
+
+    res.json({ success: true, appointment: validAppointments });
   } catch (error) {
-    console.error(error); // Logs any errors that occur during the process
-    res.json({ success: false, message: error.message }); // Sends a JSON response indicating failure and the error message
+    console.error(error);
+    res.json({ success: false, message: error.message });
   }
 };
+
 
 // API to get total users and appointments
 export const getDashboardStats = async (req, res) => {
